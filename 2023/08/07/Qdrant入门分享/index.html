@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Qdrant入门分享 | 王知鱼的博客</title><meta name="author" content="zhiyu.wang"><meta name="copyright" content="zhiyu.wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Qdrant开发操作规范集合命名规范 命名组成一般为：集合名+版本id，用下划线连接，再起别名用于业务读写 命名使用具有意义的英文词汇，词汇中间以下划线分隔 命名只能使用英文字母、数字、下划线，以英文字母开头 命名使用小写字母   示例：你想创建一个名为chat_cm的集合，则创建时集合名设定为chat_cm_1，创建完成后再为chat_cm_1这个集合创建别名chat_cm用于业务读写。这样做的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qdrant入门分享">
+<meta property="og:url" content="http://example.com/2023/08/07/Qdrant%E5%85%A5%E9%97%A8%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="王知鱼的博客">
+<meta property="og:description" content="Qdrant开发操作规范集合命名规范 命名组成一般为：集合名+版本id，用下划线连接，再起别名用于业务读写 命名使用具有意义的英文词汇，词汇中间以下划线分隔 命名只能使用英文字母、数字、下划线，以英文字母开头 命名使用小写字母   示例：你想创建一个名为chat_cm的集合，则创建时集合名设定为chat_cm_1，创建完成后再为chat_cm_1这个集合创建别名chat_cm用于业务读写。这样做的">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2023-08-07T06:27:40.000Z">
+<meta property="article:modified_time" content="2023-08-07T07:23:19.571Z">
+<meta property="article:author" content="zhiyu.wang">
+<meta property="article:tag" content="Qdrant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/07/Qdrant%E5%85%A5%E9%97%A8%E5%88%86%E4%BA%AB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Qdrant入门分享',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-07 15:23:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="王知鱼的博客"><span class="site-name">王知鱼的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Qdrant入门分享</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-08-07T06:27:40.000Z" title="Created 2023-08-07 14:27:40">2023-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-08-07T07:23:19.571Z" title="Updated 2023-08-07 15:23:19">2023-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI%E5%A4%A7%E6%A8%A1%E5%9E%8B/">AI大模型</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Qdrant入门分享"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h1 id="Qdrant开发操作规范"><a href="#Qdrant开发操作规范" class="headerlink" title="Qdrant开发操作规范"></a>Qdrant开发操作规范</h1><h2 id="集合命名规范"><a href="#集合命名规范" class="headerlink" title="集合命名规范"></a>集合命名规范</h2><ol>
+<li>命名组成一般为：集合名+版本id，用下划线连接，再起别名用于业务读写</li>
+<li>命名使用具有意义的英文词汇，词汇中间以下划线分隔</li>
+<li>命名只能使用英文字母、数字、下划线，以英文字母开头</li>
+<li>命名使用小写字母</li>
+</ol>
+<blockquote>
+<p>示例：<br>你想创建一个名为chat_cm的集合，则创建时集合名设定为chat_cm_1，创建完成后再为chat_cm_1这个集合创建别名chat_cm用于业务读写。<br>这样做的好处是后续更新了chat_cm_2版本的向量，则可以使用别名切换至新的集合，不需要调整代码中配置的集合名。</p>
+</blockquote>
+<h2 id="创建集合示例"><a href="#创建集合示例" class="headerlink" title="创建集合示例"></a>创建集合示例</h2><p>创建集合时需要指明：</p>
+<ol>
+<li>size 向量的维度</li>
+<li>distance 距离度量的类型：有dot&#x2F;cosine&#x2F;Euclidean三种</li>
+<li>shard_number 集合分片数：目前有3个节点，按照官方建议6个分片</li>
+<li>replication_factor 集合副本数：目前有3个节点，按照官方建议每个节点2个副本</li>
+<li></li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">1536</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;shard_number&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;replication_factor&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;memmap_threshold&quot;</span><span class="punctuation">:</span> <span class="number">20000</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;quantization_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;scalar&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;int8&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;always_ram&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="性能调优"><a href="#性能调优" class="headerlink" title="性能调优"></a>性能调优</h2><p>不同的用例对内存、速度和精度之间的平衡有不同的要求。</p>
+<h3 id="更喜欢低内存占用和高速搜索"><a href="#更喜欢低内存占用和高速搜索" class="headerlink" title="更喜欢低内存占用和高速搜索"></a>更喜欢低内存占用和高速搜索</h3><p>实现低内存占用的高速搜索的主要方法是将向量持久化在磁盘上，同时最小化磁盘读取的数量。</p>
+<p>向量量化是实现这一点的一种方式。量化将向量转换为更紧凑的表示形式，其可以存储在内存中并用于搜索。使用较小的向量，可以在RAM中缓存更多内容，并减少磁盘读取次数。</p>
+<p>要配置内存量化，需要使用磁盘上的原始向量，你需要使用以下配置创建一个集合:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;memmap_threshold&quot;</span><span class="punctuation">:</span> <span class="number">20000</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;quantization_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;scalar&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;int8&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;always_ram&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mmmap_threshold配置将确保向量存储在磁盘上，而always_ram将确保量向量将存储在RAM中。</p>
+</blockquote>
+<p>您也可以使用search params禁用重新评分，此配置将进一步减少磁盘读取的数量，但会略微降低搜索精度：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span>/points/search</span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;quantization&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;rescore&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vector&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">0.2</span><span class="punctuation">,</span> <span class="number">0.1</span><span class="punctuation">,</span> <span class="number">0.9</span><span class="punctuation">,</span> <span class="number">0.7</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;limit&quot;</span><span class="punctuation">:</span> <span class="number">10</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="更喜欢高精度和低内存占用"><a href="#更喜欢高精度和低内存占用" class="headerlink" title="更喜欢高精度和低内存占用"></a>更喜欢高精度和低内存占用</h3><p>如果您需要高精度，但没有足够的RAM缓存向量，您可以启用on-disk在磁盘存储向量并且开启HNSW索引：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;memmap_threshold&quot;</span><span class="punctuation">:</span> <span class="number">20000</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;hnsw_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;on_disk&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>即使内存有限的情况下，也可以通过增加HNSW索引的ef和m参数来提高搜索的精度：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="attr">&quot;hnsw_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;m&quot;</span><span class="punctuation">:</span> <span class="number">64</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ef_construct&quot;</span><span class="punctuation">:</span> <span class="number">512</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;on_disk&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在这种配置下，磁盘IOPS是一个关键因素，它将决定您执行搜索的速度。可以通过fio方式测量磁盘的IOPS。</p>
+</blockquote>
+<h3 id="优先选择高精度和高速搜索"><a href="#优先选择高精度和高速搜索" class="headerlink" title="优先选择高精度和高速搜索"></a>优先选择高精度和高速搜索</h3><p>尽可能多地在内存中保存数据对实现高精度和高速搜索是很重要的，qdrant默认遵循这种方式，但你仍可以根据你的需求进行微调。</p>
+<p>比如通过重评分和向量量化配置，可以对搜索精度和速度进行微调：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;memmap_threshold&quot;</span><span class="punctuation">:</span> <span class="number">20000</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;quantization_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;scalar&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;int8&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;always_ram&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>还有一些搜索时间参数，也可用于调整搜索精度和速度：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span>/points/search</span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;hnsw_ef&quot;</span><span class="punctuation">:</span> <span class="number">128</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;exact&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vector&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">0.2</span><span class="punctuation">,</span> <span class="number">0.1</span><span class="punctuation">,</span> <span class="number">0.9</span><span class="punctuation">,</span> <span class="number">0.7</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;limit&quot;</span><span class="punctuation">:</span> <span class="number">3</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>hnsw_ef 控制搜索过程中访问的近邻数量。这个值越高，搜索越准确，速度越慢。推荐范围为32-512<br>exact 如果设置为true，将执行精确搜索，这将更慢，但更准确。您可以使用它来比较具有不同hnsw_ef值和真实值的搜索结果。</p>
+</blockquote>
+<h3 id="延迟和吞吐量"><a href="#延迟和吞吐量" class="headerlink" title="延迟和吞吐量"></a>延迟和吞吐量</h3><p>有两种方法来衡量搜索速度：</p>
+<ul>
+<li>请求延迟：从提交请求到收到响应的时间</li>
+<li>吞吐量：系统每秒可以处理的请求数</li>
+</ul>
+<p>这些方法并不互斥，但在某些业务场景，最好对其中一种方法进行优化。</p>
+<p>为了最大限度地减少延迟，您可以设置qdrant为单个请求使用尽可能多的cpu核数。 通过将集合中的segment数设置为等于系统中的cpu核数来实现这一点。在这种情况下，每个segment将被并行处理，且将更快地获得最终结果。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;default_segment_number&quot;</span><span class="punctuation">:</span> <span class="number">16</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>为了获得更好的吞吐量，您可以为qdrant设置尽可能多的cpu核数来并行处理多个请求。 为此，您可以配置qdrant以使用最小数量的segment，通常为2。 较大的segment的好处是索引的大小和找到最近邻所需的比较次数更少。但同时需要更多的时间来建立索引。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;default_segment_number&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="批量上传索引"><a href="#批量上传索引" class="headerlink" title="批量上传索引"></a>批量上传索引</h2><h3 id="在上传期间禁用索引"><a href="#在上传期间禁用索引" class="headerlink" title="在上传期间禁用索引"></a>在上传期间禁用索引</h3><p>如果您要对某个集合进行初始上传大量的向量，则可能需要在上传期间禁用索引。它可以避免对向量进行不必要的索引，这些索引在下一批处理中会被覆盖。<br>要在上载期间禁用索引，请将indexing_threshold设置为0：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;indexing_threshold&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上传完成后，您可以通过将indexing_threshold设置为所需的值（默认值为20000）来启用索引：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PATCH /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;optimizers_config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;indexing_threshold&quot;</span><span class="punctuation">:</span> <span class="number">20000</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="直接上传到磁盘"><a href="#直接上传到磁盘" class="headerlink" title="直接上传到磁盘"></a>直接上传到磁盘</h3><p>当你上传的向量不能全部放入RAM时，你可能希望使用memmap支持。</p>
+<p>在创建集合时，可以使用on_disk参数对每个向量启用memmap。该配置始终将向量数据直接存储在磁盘上，适用于传入大量数据的场景。</p>
+<p>在这种情况下，不建议使用memmap_threshold_kb。它需要优化器不断地将内存中的segment转换为磁盘上的memmap segment。这个过程比较慢，而且在采集大量数据时，优化器可能会成为瓶颈。</p>
+<p>更多信息请参阅配置Memmap存储。</p>
+<h3 id="并行上传到多个分片"><a href="#并行上传到多个分片" class="headerlink" title="并行上传到多个分片"></a>并行上传到多个分片</h3><p>在Qdrant中，每个集合都被拆分为分片。每个分片都有一个单独的预写日志（WAL），负责排序操作。 通过创建多个分片，您可以并行上传大型数据集。每台机器2到4个分片是合理的数量。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PUT /collections/<span class="punctuation">&#123;</span>collection_name<span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vectors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">768</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cosine&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;shard_number&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="容量和规模"><a href="#容量和规模" class="headerlink" title="容量和规模"></a>容量和规模</h2><p>关于服务于多个向量的最佳集群配置的问题。 唯一正确的答案是视业务而定。</p>
+<p>这取决于您可以为您的collection选择的许多因素和选项。</p>
+<h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><p>如果您需要将所有向量保存在内存中以获得最佳性能，则有一个非常粗略的公式来估计所需的内存大小，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory_size = number_of_vectors * vector_dimension * 4 bytes * 1.5</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>元数据（索引、点版本等）需要额外的50%以及用于在优化过程期间构造的临时段。</p>
+</blockquote>
+<blockquote>
+<p>如果您需要将有效载荷与向量一起存储，建议将其存储在磁盘上，并且仅在RAM中保留索引字段。</p>
+</blockquote>
+<h3 id="以存储为中心的配置"><a href="#以存储为中心的配置" class="headerlink" title="以存储为中心的配置"></a>以存储为中心的配置</h3><p>如果您的业务优先级是以平均搜索延迟处理大量向量，建议配置mmap存储。 在这种情况下，向量将存储在磁盘上的内存映射文件中，只有最常用的矢量将保存在RAM中。</p>
+<p>可用RAM的数量将直接影响搜索的性能。 根据官方经验，如果在RAM中保留的向量少2倍，则搜索延迟将降低2倍。</p>
+<h3 id="面向子组的配置"><a href="#面向子组的配置" class="headerlink" title="面向子组的配置"></a>面向子组的配置</h3><p>如果您的用例假设向量基于有效负载值被拆分为多个集合或子组， 建议配置内存映射存储。 例如，如果您为多个用户提供搜索服务，但每个用户都有一个他们独立使用的向量子集。</p>
+<p>在这种情况下，只有向量的活动子集将保存在RAM中，这样可以许快速搜索最活跃和最近的用户。</p>
+<p>在这种情况下，您可以按以下方式估计所需的内存大小：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory_size = number_of_active_vectors * vector_dimension * 4 bytes * 1.5</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<p>当训练模型时，如果向量的维度设置过大，会导致几个问题：</p>
+<p>1.内存占用：更高的维度意味着需要更多的内存来存储模型参数和计算中间结果。如果维度设置过大，可能会超出可用的内存限制，导致训练无法进行或者效率低下。</p>
+<p>2.过拟合：过大的向量维度可能会导致过拟合问题。过拟合是指模型在训练数据上表现良好，但在未见过的测试数据上表现较差。高维度的向量可以容易地记忆训练数据的细节，而无法泛化到新的数据。</p>
+<p>3.计算复杂度：更高的维度意味着需要进行更多的计算操作。这会增加模型训练和推断的时间成本。如果维度设置过大，训练和推断的速度可能会变得非常缓慢，不太适用于实时应用或大规模数据集。</p>
+<p>因此，在选择向量的维度时，需要在资源限制、模型性能和计算效率之间进行权衡。通常情况下，适当的维度可以在保持模型性能的同时，提供足够的计算效率和内存使用。可以通过实验和验证来确定最佳的维度设置。</p>
+<pre><code>
+词向量的维度设置需要考虑多个因素，包括语料库的规模、任务的复杂度和可用的计算资源。一般来说，较大的维度可以捕捉更多的语义信息，但也会增加计算成本。较小的维度可能无法充分表示词语之间的关系。通常，词向量维度的范围在100到300之间。
+
+对于小规模的数据集或简单任务，可以选择较小的维度，如100维。这样可以节省计算资源，并且可能足够表达基本的语义关系。对于大规模数据集或复杂任务，可以选择更大的维度，如200维或300维。这样可以更准确地捕捉更丰富的语义信息。
+
+在实践中，可以尝试不同的维度设置，并通过与任务的性能进行评估来确定最佳维度。还可以考虑使用预训练的词向量模型，如Word2Vec、GloVe或BERT，它们通常具有经过优化的维度设置。
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">词向量的维度大概多少才够？</span><br><span class="line"></span><br><span class="line">先说结论:</span><br><span class="line">n &gt; 8.33logN</span><br><span class="line">更简约的话可以直接记:</span><br><span class="line">n &gt; 8logN</span><br><span class="line">其中N是词表大小，n就是词向量维度，</span><br><span class="line"></span><br><span class="line">是自然对数。当n超过这个阈值时，就说明模型有足够的容量容纳这N个词语（当然n越大过拟合风险也越大）。</span><br><span class="line"></span><br><span class="line">这样一来，当N=100000时，得到的n大约是96，所以对于10万个词的词向量模型来说，维度选择96就足够了；如果要容纳500万个词，那么n大概就是128。</span><br></pre></td></tr></table></figure>
+
+确定词向量的维度大小是使用嵌入(embedding)训练词向量时的一个重要决策。以下是一些常见的方法来确定词向量的维度大小：
+
+1. 基于任务的性能：一种常用的方法是根据具体任务的性能来选择合适的维度大小。训练不同维度大小的词向量，并在特定任务上评估它们的性能，选择在该任务上表现最佳的维度大小。
+
+2. 经验值：根据经验，一般来说，较小的维度（例如50或100）可以捕捉到一些基本的语义信息，而较大的维度（例如200或300）可能能够更好地捕捉更丰富的语义信息。可以根据应用场景和数据规模选择一个合适的经验值。
+
+3. 数据规模：数据规模也会影响到选择词向量维度大小。通常来说，较大的数据集可以支持更高维度的词向量，因为它们可以提供更多的样本来训练更复杂的模型。相反，如果数据集较小，选择较小的维度可能更合适，以避免过拟合。
+
+4. 先验知识：某些特定领域或任务可能有先验知识可用，可以根据这些知识来选择适当的维度大小。例如，某些任务可能需要特定的维度大小来对应特定的语言特征。
+
+总的来说，选择词向量的维度大小需要综合考虑任务性能、经验值、数据规模和先验知识等因素。在实践中，可以尝试不同的维度大小，并使用评估指标来选择最佳的维度大小。
+</code></pre>
+<p>lsblk -f<br>mkfs -t xfs &#x2F;dev&#x2F;vda<br>vim &#x2F;etc&#x2F;fstab<br>mount -a</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">zhiyu.wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/07/Qdrant%E5%85%A5%E9%97%A8%E5%88%86%E4%BA%AB/">http://example.com/2023/08/07/Qdrant%E5%85%A5%E9%97%A8%E5%88%86%E4%BA%AB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Qdrant/">Qdrant</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/07/Qdrant%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" title="Qdrant使用规范"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Qdrant使用规范</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/07/hello-world/" title="Hello World"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Hello World</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/08/07/Qdrant%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" title="Qdrant使用规范"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-07</div><div class="title">Qdrant使用规范</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">zhiyu.wang</div><div class="author-info__description">基于Hexo的博客网站，分析一些随笔和技术文章。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Qdrant%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83"><span class="toc-number">1.</span> <span class="toc-text">Qdrant开发操作规范</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">1.1.</span> <span class="toc-text">集合命名规范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">创建集合示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98"><span class="toc-number">1.3.</span> <span class="toc-text">性能调优</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E5%96%9C%E6%AC%A2%E4%BD%8E%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8%E5%92%8C%E9%AB%98%E9%80%9F%E6%90%9C%E7%B4%A2"><span class="toc-number">1.3.1.</span> <span class="toc-text">更喜欢低内存占用和高速搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E5%96%9C%E6%AC%A2%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%92%8C%E4%BD%8E%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">更喜欢高精度和低内存占用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E9%80%89%E6%8B%A9%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%92%8C%E9%AB%98%E9%80%9F%E6%90%9C%E7%B4%A2"><span class="toc-number">1.3.3.</span> <span class="toc-text">优先选择高精度和高速搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E5%92%8C%E5%90%9E%E5%90%90%E9%87%8F"><span class="toc-number">1.3.4.</span> <span class="toc-text">延迟和吞吐量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E4%B8%8A%E4%BC%A0%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.</span> <span class="toc-text">批量上传索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E4%B8%8A%E4%BC%A0%E6%9C%9F%E9%97%B4%E7%A6%81%E7%94%A8%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.1.</span> <span class="toc-text">在上传期间禁用索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E4%B8%8A%E4%BC%A0%E5%88%B0%E7%A3%81%E7%9B%98"><span class="toc-number">1.4.2.</span> <span class="toc-text">直接上传到磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E4%B8%8A%E4%BC%A0%E5%88%B0%E5%A4%9A%E4%B8%AA%E5%88%86%E7%89%87"><span class="toc-number">1.4.3.</span> <span class="toc-text">并行上传到多个分片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E9%87%8F%E5%92%8C%E8%A7%84%E6%A8%A1"><span class="toc-number">1.5.</span> <span class="toc-text">容量和规模</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5%E5%AD%98%E5%82%A8%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.2.</span> <span class="toc-text">以存储为中心的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AD%90%E7%BB%84%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.3.</span> <span class="toc-text">面向子组的配置</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/07/Qdrant%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" title="Qdrant使用规范">Qdrant使用规范</a><time datetime="2023-08-07T06:27:40.000Z" title="Created 2023-08-07 14:27:40">2023-08-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/07/Qdrant%E5%85%A5%E9%97%A8%E5%88%86%E4%BA%AB/" title="Qdrant入门分享">Qdrant入门分享</a><time datetime="2023-08-07T06:27:40.000Z" title="Created 2023-08-07 14:27:40">2023-08-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/07/hello-world/" title="Hello World">Hello World</a><time datetime="2023-08-07T03:12:50.831Z" title="Created 2023-08-07 11:12:50">2023-08-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By zhiyu.wang</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
